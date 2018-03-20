@@ -17,7 +17,7 @@ export class BarcodeScannerPage {
   ) {
   }
 
-  onGetBarCode(): void {
+  onGetBarcode(): void {
     this.barcodeScanner.scan()
       .then((barcodeResult: BarcodeScanResult) => {
         this.barcodeResult = barcodeResult;
