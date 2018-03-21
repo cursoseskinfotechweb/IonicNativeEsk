@@ -8,6 +8,8 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 })
 export class CameraPage {
 
+  photoUri: string;
+
   constructor(
     public actionSheetCtrl: ActionSheetController,
     public camera: Camera,
@@ -51,6 +53,7 @@ export class CameraPage {
     this.camera.getPicture(cameraOptions)
       .then((fileUri: string) => {
         console.log('Photo: ', fileUri);
+        this.photoUri = fileUri;
       }).catch((error: Error) => console.log('Camera error: ', error));
   }
 }

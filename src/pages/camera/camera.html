@@ -8,5 +8,17 @@
 
 
 <ion-content padding>
-
+  <h3 [hidden]="photo">Please, select image!</h3>
+  <img [src]="photoUri" style="width: 100%;" [hidden]="!photo">
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-buttons>
+      <button ion-button icon-left (click)="onActionSheet()">
+        <ion-icon name="camera"></ion-icon>
+        Select Image
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
