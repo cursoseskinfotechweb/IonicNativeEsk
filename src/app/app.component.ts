@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { BarcodeScannerPage } from '../pages/barcode-scanner/barcode-scanner';
+import { CameraPage } from '../pages/camera/camera';
 
 @Component({
   templateUrl: 'app.html'
@@ -12,16 +13,15 @@ import { BarcodeScannerPage } from '../pages/barcode-scanner/barcode-scanner';
 export class MyApp {
 
   @ViewChild(Nav) nav: Nav;
-
-  pages: [{title: string, component: any}]
-  
+  pages: [{title: string, component: any}];
   rootPage:any = HomePage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
 
     this.pages = [
-      {title: 'Barcode', component: BarcodeScannerPage}
-    ]
+      {title: 'Barcode', component: BarcodeScannerPage},
+      {title: 'Câmera', component: CameraPage}
+    ];
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.

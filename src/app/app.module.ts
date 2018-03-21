@@ -9,10 +9,12 @@ import { Camera } from '@ionic-native/camera';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { BarcodeScannerPage } from '../pages/barcode-scanner/barcode-scanner';
+import { CameraPage } from '../pages/camera/camera';
 
 @NgModule({
   declarations: [
     BarcodeScannerPage,
+    CameraPage,
     MyApp,
     HomePage
   ],
@@ -23,6 +25,7 @@ import { BarcodeScannerPage } from '../pages/barcode-scanner/barcode-scanner';
   bootstrap: [IonicApp],
   entryComponents: [
     BarcodeScannerPage,
+    CameraPage,
     MyApp,
     HomePage
   ],
