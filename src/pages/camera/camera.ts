@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ActionSheetController } from 'ionic-angular';
+import { NavController, NavParams, ActionSheetController, Platform } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { FilePath } from '@ionic-native/file-path';
+import { File } from '@ionic-native/file';
 
 @Component({
   selector: 'page-camera',
@@ -13,8 +15,11 @@ export class CameraPage {
   constructor(
     public actionSheetCtrl: ActionSheetController,
     public camera: Camera,
+    public file: File,
+    public filePath: FilePath,
     public navCtrl: NavController, 
-    public navParams: NavParams
+    public navParams: NavParams,
+    public platform: Platform
   ) {
   }
 
@@ -56,4 +61,31 @@ export class CameraPage {
         this.photoUri = fileUri;
       }).catch((error: Error) => console.log('Camera error: ', error));
   }
+
+  correctPathAndGetFileName( fileUri: string, sourceType: number ): Promise<{ oldFilePath: string, oldFileName: string }> {
+    
+    if (this.platform.is('android') && sourceType === this.camera.PictureSourceType.PHOTOLIBRARY) {
+      return this.filePath.resolveNativePath(fileUri)
+        .then((correctFileUri: string) => {
+          return {
+            oldFilePath: correctFileUri.substr(0, (correctFileUri.lastIndexOf('/') + 1));
+            oldFileName: fileUri.substring(
+              fileUri.lastIndexOf('/')+1, 
+              fileUri.lastIndexOf('?') 
+            )
+          }
+        })
+        .catch((error: Error) => {
+          let errorMsg: string = 'Error ao corrigir path no Android: ' 
+          console.log(errorMsg, error)
+          return Promise.reject(errorMsg)
+        });
+    }
+
+    return Promise.resolve({
+      oldFilePath: fileUri.substr(0, (fileUri.lastIndexOf('/') + 1)),
+      oldFileName: fileUri.substr(fileUri.lastIndexOf('/') + 1) 
+    })
+  }
+
 }
