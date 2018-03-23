@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ActionSheetController, Platform } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { FilePath } from '@ionic-native/file-path';
-import { File } from '@ionic-native/file';
+import { File, Entry } from '@ionic-native/file';
 
 @Component({
   selector: 'page-camera',
@@ -10,7 +10,7 @@ import { File } from '@ionic-native/file';
 })
 export class CameraPage {
 
-  photoUri: string;
+  photo: Entry;
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
@@ -58,7 +58,6 @@ export class CameraPage {
     this.camera.getPicture(cameraOptions)
       .then((fileUri: string) => {
         console.log('File URI: ', fileUri);
-        this.photoUri = fileUri;
 
         this.correctPathAndGetFileName(fileUri, sourceType)
           .then(data => {
@@ -102,4 +101,31 @@ export class CameraPage {
     return new Date().getTime() + extension; 
   }
 
+  private saveFile(fileUri: string, sourceType: number): Promise<Entry> {
+    return this.correctPathAndGetFileName(fileUri, sourceType)
+      .then((data: {oldFilePath: string, oldFileName: string}) => {
+
+        return this.file.copyFile(
+          data.oldFilePath, 
+          data.oldFileName, 
+          this.file.dataDirectory, 
+          this.createNewFileName(data.oldFileName)
+        ).then((entry: Entry) => {
+
+          this.photo = entry;
+
+          return entry;
+        })
+        .catch((error: Error) => {
+          let errorMsg: string = 'Erro ao copiar o arquivo: ' ;
+          console.log(errorMsg, error)
+          return Promise.reject(errorMsg)
+        });
+      })
+      .catch((error: Error) => {
+        let errorMsg: string = 'Erro na chamaada do método correctPathAndGetFileName' 
+        console.log(errorMsg, error)
+        return Promise.reject(errorMsg)
+      });
+  }
 }
