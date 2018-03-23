@@ -46,7 +46,7 @@ export class CameraPage {
     }).present();
   }
 
-  takePicture(sourceType: number): void {
+  private takePicture(sourceType: number): void {
 
     let cameraOptions: CameraOptions = {
       correctOrientation: true,
@@ -59,9 +59,11 @@ export class CameraPage {
       .then((fileUri: string) => {
         console.log('File URI: ', fileUri);
 
-        this.correctPathAndGetFileName(fileUri, sourceType)
-          .then(data => {
-            console.log('Corrigido: ', data);
+        this.saveFile(fileUri, sourceType)
+          .then((entry: Entry) => {
+            this.photo = entry;
+
+            console.log('Entry: ', entry);
           })
 
       }).catch((error: Error) => console.log('Camera error: ', error));
@@ -110,13 +112,7 @@ export class CameraPage {
           data.oldFileName, 
           this.file.dataDirectory, 
           this.createNewFileName(data.oldFileName)
-        ).then((entry: Entry) => {
-
-          this.photo = entry;
-
-          return entry;
-        })
-        .catch((error: Error) => {
+        ).catch((error: Error) => {
           let errorMsg: string = 'Erro ao copiar o arquivo: ' ;
           console.log(errorMsg, error)
           return Promise.reject(errorMsg)
