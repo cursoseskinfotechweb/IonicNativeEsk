@@ -57,18 +57,24 @@ export class CameraPage {
 
     this.camera.getPicture(cameraOptions)
       .then((fileUri: string) => {
-        console.log('Photo: ', fileUri);
+        console.log('File URI: ', fileUri);
         this.photoUri = fileUri;
+
+        this.correctPathAndGetFileName(fileUri, sourceType)
+          .then(data => {
+            console.log('Corrigido: ', data);
+          })
+
       }).catch((error: Error) => console.log('Camera error: ', error));
   }
 
-  correctPathAndGetFileName( fileUri: string, sourceType: number ): Promise<{ oldFilePath: string, oldFileName: string }> {
+  private correctPathAndGetFileName( fileUri: string, sourceType: number ): Promise<{ oldFilePath: string, oldFileName: string }> {
     
     if (this.platform.is('android') && sourceType === this.camera.PictureSourceType.PHOTOLIBRARY) {
       return this.filePath.resolveNativePath(fileUri)
         .then((correctFileUri: string) => {
           return {
-            oldFilePath: correctFileUri.substr(0, (correctFileUri.lastIndexOf('/') + 1));
+            oldFilePath: correctFileUri.substr(0, (correctFileUri.lastIndexOf('/') + 1)),
             oldFileName: fileUri.substring(
               fileUri.lastIndexOf('/')+1, 
               fileUri.lastIndexOf('?') 
