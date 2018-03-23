@@ -94,4 +94,12 @@ export class CameraPage {
     })
   }
 
+  private createNewFileName(oldFileName: string): string {
+    // .pnj .jpg
+    let extension: string = oldFileName.substr(oldFileName.lastIndexOf('.'));
+
+    // 1233331222555.jpg
+    return new Date().getTime() + extension; 
+  }
+
 }
