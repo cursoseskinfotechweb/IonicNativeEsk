@@ -53,10 +53,11 @@ export class CameraPage {
   onUpload(): void {
     let serverURL: string = 'https://node-file-upload-esk.now.sh';
     let options: FileUploadOptions = {
-      fileKey: 'photo',
+      fileKey: 'file',
       fileName: this.photo.name,
       chunkedMode: false,
-      mimeType: 'multipart/form-data',
+      mimeType: 'image/jpg',
+      headers: {Connection: "close"},
       params: {
         upload: new Date().getTime()
       }
@@ -69,8 +70,12 @@ export class CameraPage {
       content: 'Loading...'
     });
     loading.present();
-    
-    fileTransfer.upload(this.photo.nativeURL, `${serverURL}/upload`, options)
+
+    console.log('Photo nativeURL: ', this.photo.nativeURL);
+    console.log('encodeURI: ', encodeURI(`${serverURL}/upload`));
+    console.log('options: ', options);
+
+    fileTransfer.upload(this.photo.nativeURL, encodeURI(`${serverURL}/upload`))
       .then((data: FileUploadResult) => {
 
         this.showToast('Imagem successfuly uploaded!');
