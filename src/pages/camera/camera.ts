@@ -58,7 +58,7 @@ export class CameraPage {
       chunkedMode: false,
       mimeType: 'multipart/form-data',
       params: {
-        upload: new Date().getTime();
+        upload: new Date().getTime()
       }
     };
 
