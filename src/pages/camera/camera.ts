@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ActionSheetController, Platform } from 'ionic-angular';
+import { NavController, NavParams, ActionSheetController, Platform, LoadingController, ToastController, Loading } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { FilePath } from '@ionic-native/file-path';
 import { File, Entry } from '@ionic-native/file';
+import { FileTransfer, FileUploadOptions, FileTransferObject, FileUploadResult, FileTransferError } from '@ionic-native/file-transfer';
 
 @Component({
   selector: 'page-camera',
@@ -17,8 +18,11 @@ export class CameraPage {
     public camera: Camera,
     public file: File,
     public filePath: FilePath,
+    public loadingCtrl: LoadingController,
+    public fileTransfer: FileTransfer,
     public navCtrl: NavController, 
     public navParams: NavParams,
+    public toastCtrl: ToastController,
     public platform: Platform
   ) {
   }
@@ -46,6 +50,50 @@ export class CameraPage {
     }).present();
   }
 
+  onUpload(): void {
+    let serverURL: string = 'https://node-file-upload-esk.now.sh';
+    let options: FileUploadOptions = {
+      fileKey: 'photo',
+      fileName: this.photo.name,
+      chunkedMode: false,
+      mimeType: 'multipart/form-data',
+      params: {
+        upload: new Date().getTime();
+      }
+    };
+
+    const fileTransfer: FileTransferObject = 
+      this.fileTransfer.create();
+
+    let loading: Loading = this.loadingCtrl.create({
+      content: 'Loading...'
+    });
+    loading.present();
+    
+    fileTransfer.upload(this.photo.nativeURL, `${serverURL}/upload`, options)
+      .then((data: FileUploadResult) => {
+
+        this.showToast('Imagem successfuly uploaded!');
+        console.log('Upload to: ', `${serverURL}/photo/${this.photo.name}`);
+        loading.dismiss();
+
+      }).catch((error: FileTransferError) => {
+
+        this.showToast('Error while uploading file.');
+        console.log('Error while uploading file: ', error);
+        loading.dismiss();
+
+      })
+  }
+
+  private showToast(message: string): void {
+    this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: 'top'
+    }).present();
+  }
+  
   private takePicture(sourceType: number): void {
 
     let cameraOptions: CameraOptions = {
@@ -124,4 +172,5 @@ export class CameraPage {
         return Promise.reject(errorMsg)
       });
   }
+
 }
