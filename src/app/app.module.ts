@@ -7,7 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 import { FilePath } from '@ionic-native/file-path';
-
+import { FileTransfer } from '@ionic-native/file-transfer' 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { BarcodeScannerPage } from '../pages/barcode-scanner/barcode-scanner';
@@ -36,6 +36,7 @@ import { CameraPage } from '../pages/camera/camera';
     Camera,
     File,
     FilePath,
+    FileTransfer,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}

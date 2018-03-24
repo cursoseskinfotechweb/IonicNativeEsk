@@ -19,6 +19,10 @@
         <ion-icon name="camera"></ion-icon>
         Select Image
       </button>
+      <button ion-button icon-left (click)="onUpload()" [disabled]="!photo">
+        <ion-icon name="cloud-upload"></ion-icon>
+        Upload
+      </button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
